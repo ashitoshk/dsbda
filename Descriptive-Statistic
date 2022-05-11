@@ -1,0 +1,44 @@
+import pandas as pd
+import numpy as np
+# Load the data
+# Download the Iris.csv file from https://www.kaggle.com/datasets/saurabh00007/iriscsv
+# keep the .csv file in the same folder.
+df = pd.read_csv("Iris.csv")
+print(df.shape)
+print(df.info())
+
+# 50th Percentile
+def q50(x):
+  return x.quantile(0.5)
+
+# 90th Percentile
+def q90(x):
+  return x.quantile(0.9)
+
+## Solution For Problem Statement 1
+print("\n Problem Solution 1: ")
+print( "\nProviding summary statistics for Species(categorical variable) groupedBy Sepal-Length(quantitative variable)\n")
+print(df.groupby(['Species'])[['SepalLengthCm']].agg(['mean','median','min','max','std',q50,q90]))
+print( "\nProviding summary statistics for Species(categorical variable) groupedBy Sepal-Width(quantitative variable)")
+print(df.groupby(['Species'])[['SepalWidthCm']].agg(['mean','median','min','max','std',q50,q90]))
+print( "\nProviding summary statistics for Species(categorical variable) groupedBy Petal-Length(quantitative variable)")
+print(df.groupby(['Species'])[['PetalLengthCm']].agg(['mean','median','min','max','std',q50,q90]))
+print( "\nProviding summary statistics for Species(categorical variable) groupedBy Petal-Width(quantitative variable)")
+print(df.groupby(['Species'])[['PetalWidthCm']].agg(['mean','median','min','max','std',q50,q90]))
+
+## Solution For Problem Statement 2
+print("\n Problem Solution 2: ")
+print("\n Mean of dataset groupedby Species")
+print(df.groupby(['Species'])[['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']].mean())
+
+print("\n Median of dataset groupedby Species")
+print(df.groupby(['Species'])[['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']].median())
+
+print("\n50 Percentile result for 'Species' in Iris dataframe")
+print(df.groupby(['Species'])[['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']].quantile(0.5))
+
+print("\n90 Percentile result for 'Species' in Iris dataframe")
+print(df.groupby(['Species'])[['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']].quantile(0.9))
+
+print("\n Standard Deviation of dataset groupedby Species")
+print(df.groupby(['Species'])[['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']].std())
