@@ -1,0 +1,87 @@
+# Data Analytics II
+# 1. Implement logistic regression using Python/R to perform classification on
+# Social_Network_Ads.csv dataset.
+# 2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall
+# on the given dataset
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as mtp
+
+df=pd.read_csv("Social_Network_Ads.csv")
+
+df.head()
+
+df.describe()
+
+df.isnull().sum()
+
+df.shape
+
+df.info()
+
+x = df.iloc[:,2:4]
+y = df.iloc[:,4]
+
+print(x)
+
+from sklearn.model_selection import train_test_split
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=42)
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix,ConfusionMatrixDisplay,classification_report,accuracy_score, precision_score, recall_score, f1_score
+
+scale = StandardScaler()
+x_train = scale.fit_transform(x_train)
+x_test = scale.transform(x_test)
+
+lr = LogisticRegression(random_state=0, solver='lbfgs')
+lr.fit(x_train, y_train)
+pred = lr.predict(x_test)
+
+x1=df.iloc[:, 0].values
+y1=df.iloc[:, 4].values
+mtp.scatter(x1,y1,color='purple',s=50)
+mtp.xlabel('UserID')
+mtp.ylabel('Purchased')
+mtp.title('Userid VS purchased')
+mtp.show()
+
+x2=df.iloc[:, 1].values
+y2=df.iloc[:, 4].values
+mtp.scatter(x2,y2,color='green',s=50)
+mtp.xlabel('Gender')
+mtp.ylabel('Purchased')
+mtp.title('Gender VS purchased')
+mtp.show()
+
+x3=df.iloc[:, 2].values
+y3=df.iloc[:, 4].values
+mtp.scatter(x3,y3,color='red',s=50)
+mtp.xlabel('Age')
+mtp.ylabel('Purchased')
+mtp.title('Age VS purchased')
+mtp.show()
+
+x4=df.iloc[:, 3].values
+y4=df.iloc[:, 4].values
+mtp.scatter(x4,y4,color='orange',s=50)
+mtp.xlabel('EstimatedSalary')
+mtp.ylabel('Purchased')
+mtp.title('EstimatedSalary VS purchased')
+mtp.show()
+
+import seaborn as sns
+mtp.figure(figsize=(7,4))
+sns.heatmap(df.corr(),annot=True,cmap='cubehelix_r')
+mtp.show()
+
+matrix = confusion_matrix(y_test, pred, labels= lr.classes_)
+
+conf_matrix = ConfusionMatrixDisplay(confusion_matrix=matrix,display_labels=lr.classes_)
+
+conf_matrix.plot(cmap=mtp.cm.Blues)
+mtp.show()
