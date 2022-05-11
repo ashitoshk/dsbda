@@ -1,0 +1,94 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("titanic-data.csv")
+df.head()
+# Finding different patterns in dataset
+# Ticket class count for Pclasses
+sns.set_theme(style="darkgrid")
+ax = sns.countplot(x="Pclass", data=df)
+ax = sns.countplot(x="Pclass", hue="Sex", data=df)
+ax = sns.countplot(x="Embarked", data=df)
+
+
+def plot(table, legloc='upper right',
+        plt_style='seaborn-ticks',
+        color_palette="dark", sorter=None, stacked=False,
+        kind='bar', percentage=True,
+        custom_title=None, minimal=True, figsize=(19, 10), width=0.7):
+   grouped = table
+
+   # Tranform to percentages
+   if percentage == True:
+       grouped = np.round(grouped.divide(grouped['Total'], axis=0) * 100, 0)
+   try:
+       del grouped['Total']
+   except:
+       pass
+
+   # rearrange the columns
+   if sorter:
+       grouped = grouped[sorter]
+
+   plt.style.use(plt_style)
+   sns.set_palette(sns.color_palette(color_palette))
+   ax = grouped.plot(kind=kind, stacked=stacked, figsize=figsize, width=width)
+   _ = plt.setp(ax.get_xticklabels(), rotation=0)  # Rotate labels
+   plt.legend(loc=legloc)  # plot the legend normally
+
+   # annotate the bars
+   if percentage == True:
+       for p in ax.patches:
+           ax.annotate('{}%'.format(int(np.round(p.get_height(), decimals=2))),
+                       (p.get_x() + p.get_width() / 2.,
+                        p.get_height()), ha='center', va='center',
+                       xytext=(0, 10), textcoords='offset points')
+   else:
+       for p in ax.patches:
+           ax.annotate(np.round(p.get_height(), decimals=2),
+                       (p.get_x() + p.get_width() / 2.,
+                        p.get_height()), ha='center', va='center',
+                       xytext=(0, 10), textcoords='offset points')
+   if minimal == True:
+       ax.get_yaxis().set_ticks([])
+       plt.xlabel('')
+       sns.despine(top=True, right=True, left=True, bottom=False);
+   else:
+       pass
+       # set custom title
+   plt.title(custom_title)
+
+
+def Groupby_TwoCol_Plot(df, col1, col2, legloc='upper right',
+                       plt_style='ggplot',
+                       color_palette="dark", sorter=None, stacked=False,
+                       kind='bar', percentage=True,
+                       custom_title=None, minimal=True, figsize=(14, 6), width=0.6):
+   # Group by Placement and Representative and unstack by Placement
+   grouped = df.groupby([col2, col1]).size().unstack(col2)
+
+   # Make a totals column sort and delete after
+   grouped['Total'] = grouped.sum(axis=1)
+   # grouped = grouped.sort_values('Total', ascending = False)
+
+   plot(grouped, legloc=legloc,
+        plt_style=plt_style,
+        color_palette=color_palette, sorter=sorter, stacked=stacked,
+        kind=kind, percentage=percentage,
+        custom_title=custom_title, minimal=minimal, figsize=figsize, width=width)
+
+
+Groupby_TwoCol_Plot(df, 'Embarked', 'Survived', color_palette=('darkred', 'steelblue'),
+                   plt_style='seaborn-ticks', custom_title='Proportion of Survived per Embarkation Port')
+# Calculate percentages of port passengers per Class
+Groupby_TwoCol_Plot(df, 'Embarked', 'Pclass', color_palette=('cubehelix'),
+                   plt_style='seaborn-ticks', custom_title='Proportion of Embarked per PcClass', sorter=[1, 2, 3])
+# Ticket Fare distribution among passengers
+
+sns.displot(df['Fare'], kde=False, bins=10)
+sns.barplot(x='Sex', y='Fare', data=df)
+plt.figure(figsize=(8, 8))
+sns.scatterplot(x="Age", y="Fare", hue="Sex", data=df)
+plt.show()
