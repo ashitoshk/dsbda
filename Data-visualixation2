@@ -1,0 +1,11 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+df = pd.read_csv("titanic-data.csv")
+df.head()
+g = sns.FacetGrid(data=df,col="Sex",margin_titles=True)
+g.map(sns.boxplot,"Survived","Age",order=[False,True])
+plt.show()
