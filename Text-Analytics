@@ -1,0 +1,132 @@
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+sentence_data = "The First sentence is about Python. The Second: about Django. You can learn Python,Django and Data Ananlysis here."
+nltk_tokens = nltk.sent_tokenize(sentence_data)
+print(nltk_tokens)
+
+
+
+nltk_tokens1 = nltk.word_tokenize(sentence_data)
+print(nltk_tokens1)
+
+
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+stop_words = set(stopwords.words('english'))
+
+#Dummy text
+txt = "Sukanya, Rajib and Naba are my good friends. "\
+"Sukanya is getting married next year. " \
+"Marriage is a big step in one’s life." \
+"It is both exciting and frightening. " \
+"But friendship is a sacred bond between people." \
+"It is a special kind of love between us. " \
+"Many of you must have tried searching for a friend "\
+"but never found the right one."
+
+# sent_tokenize is one of instances of
+# PunktSentenceTokenizer from the nltk.tokenize.punkt module
+
+tokenized = sent_tokenize(txt)
+for i in tokenized:
+
+# Word tokenizers is used to find the words
+# and punctuation in a string
+   wordsList = nltk.word_tokenize(i)
+
+# removing stop words from wordList
+wordsList = [w for w in wordsList if not w in stop_words]
+
+# Using a Tagger. Which is part-of-speech
+# tagger or POS-tagger.
+tagged = nltk.pos_tag(wordsList)
+
+print(tagged)
+
+
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+example_sent = """This is a sample sentence,showing off the stop words filtration."""
+
+stop_words = set(stopwords.words('english'))
+
+word_tokens = word_tokenize(example_sent)
+
+filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+
+filtered_sentence = []
+
+for w in word_tokens:
+   if w not in stop_words:
+       filtered_sentence.append(w)
+
+print(word_tokens)
+print(filtered_sentence)
+
+
+
+
+# import these modules
+from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize
+
+ps = PorterStemmer()
+
+# choose some words to be stemmed
+words = ["program", "programs", "programmer", "programming", "programmers"]
+
+for w in words:
+   print(w, " : ", ps.stem(w))
+
+
+# import these modules
+from nltk.stem import WordNetLemmatizer
+
+lemmatizer = WordNetLemmatizer()
+
+print("rocks :", lemmatizer.lemmatize("rocks"))
+print("corpora :", lemmatizer.lemmatize("corpora"))
+
+# a denotes adjective in "pos"
+print("better :", lemmatizer.lemmatize("better", pos ="a"))
+
+
+# import required module
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# assign documents
+d0 = 'Geeks for geeks'
+d1 = 'Geeks'
+d2 = 'r2j'
+
+# merge documents into a single corpus
+string = [d0, d1, d2]
+
+# create object
+tfidf = TfidfVectorizer()
+
+# get tf-df values
+result = tfidf.fit_transform(string)
+
+# get idf values
+print('\nidf values:')
+for ele1, ele2 in zip(tfidf.get_feature_names(), tfidf.idf_):
+   print(ele1, ':', ele2)
+
+# get indexing
+print('\nWord indexes:')
+print(tfidf.vocabulary_)
+
+# display tf-idf values
+print('\ntf-idf value:')
+print(result)
+
+# in matrix form
+print('\ntf-idf values in matrix form:')
+print(result.toarray())
