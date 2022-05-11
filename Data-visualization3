@@ -1,0 +1,44 @@
+# **Data Visualization III**
+#
+# Download the Iris flower dataset or any other dataset into a DataFrame. (e.g.,
+# https://archive.ics.uci.edu/ml/datasets/Iris ). Scan the dataset and give the inference as:
+# 1. List down the features and their types (e.g., numeric, nominal) available in the dataset.
+# 2. Create a histogram for each feature in the dataset to illustrate the feature distributions.
+# 3. Create a boxplot for each feature in the dataset.
+# 4. Compare distributions and identify outliers.
+
+import pandas as pd
+import numpy as np
+df = pd.read_csv("iris.data")
+df.head()
+df.shape
+df.describe()
+df.tail()
+# print(df[df.columns].mean())
+# df.std()
+# df.mode()
+# df.cov()
+# df.mode()
+# df.median()
+# df.var()
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+df.hist(bins=5)
+df.hist()
+plt.show()
+df.columns
+numeric_cols=['5.1','3.5','1.4','0.2','Iris-setosa']
+np.min(df[numeric_cols])
+np.max(df[numeric_cols])
+df.quantile([0.0,0.1,0.5,1.0],numeric_only=True)
+iris_long = pd.melt(df, id_vars='5.1')
+ax = sns.boxplot(x="5.1", y="value",hue="variable", data=iris_long)
+
+df['5.1'].value_counts()
+df['5.1'].plot.density()
+plt.show()
+df.hist(bins=5)
+sns.heatmap(df.corr(), annot=True)
+plt.show()
+#Correlation is feature to feature relation
