@@ -1,0 +1,64 @@
+# Data Analytics III
+# 1. Implement Simple Naïve Bayes classification algorithm using Python/R on iris.csv dataset.
+# 2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall
+# on the given dataset.
+#
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
+dataset= pd.read_csv('Iris.csv')
+
+dataset.head()
+
+# Commented out IPython magic to ensure Python compatibility.
+# %matplotlib inline
+img=mpimg.imread('iris_types.jpg')
+plt.figure(figsize=(10,30))
+plt.axis('off')
+plt.imshow(img)
+
+x=dataset.iloc[:,:4].values
+y=dataset['Variety'].values
+
+from pandas.core.common import random_state
+from sklearn.model_selection import train_test_split
+X_train, X_test , y_train, y_test=train_test_split(x,y, test_size = 0.20)
+
+from sklearn.preprocessing import StandardScaler
+sc= StandardScaler()
+X_train=sc.fit_transform(X_train)
+X_test=sc.transform(X_test)
+
+from sklearn.naive_bayes import GaussianNB
+nvclassifier=GaussianNB()
+nvclassifier.fit(X_train,y_train)
+
+y_pred= nvclassifier.predict(X_test)
+print(y_pred)
+
+y_compare=np.vstack((y_test,y_pred)).T
+y_compare[:5,:]
+
+from sklearn.metrics import confusion_matrix
+cm= confusion_matrix(y_test,y_pred)
+print(cm)
+
+a=cm.shape
+corrPred=0
+falsePred=0
+
+for row in range(a[0]):
+ for c in range(a[1]):
+   if row == c :
+     corrPred += cm[row,c]
+   else :
+     falsePred += cm[row,c]
+
+print('correct Prediction',corrPred)
+print('false Prediction',falsePred)
+print('\n')
+print('\n Accuracy of Naive Bayes Classification',corrPred/(cm.sum()))
+print('\n ErrorRate of Naive Bayes Classification',falsePred/(cm.sum()))
